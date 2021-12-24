@@ -139,3 +139,4 @@ dmypy.json
 
 #models
 *.onnx
+ocrapi/resources/models/msyh.ttc

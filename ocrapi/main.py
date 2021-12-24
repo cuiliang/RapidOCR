@@ -18,10 +18,10 @@ app.config['MAX_CONTENT_LENGTH'] = 3 * 1024 * 1024
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return "Hello world."
 
 
-@app.route('/ocr', methods=['POST', 'GET'])
+@app.route('/ocr', methods=['POST'])
 def ocr():
     if request.method == 'POST':
         url_get = request.get_json()
@@ -36,7 +36,19 @@ def ocr():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0',
-            port=9003,
-            debug=False,
-            processes=True)
+    debug = False
+    if debug:
+        app.run(host='127.0.0.1',
+                port=9003,
+                debug=True,
+                processes=True)
+    else:
+        host = '0.0.0.0'
+        port = 8080
+        print(
+            f'launching gevent server... on {host}:{port}'
+        )
+        
+        from gevent.pywsgi import WSGIServer # pip install gevent
+        http_server = WSGIServer((host, port), app)
+        http_server.serve_forever()
