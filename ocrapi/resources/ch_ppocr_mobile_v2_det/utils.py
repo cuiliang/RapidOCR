@@ -25,6 +25,8 @@ import numpy as np
 import pyclipper
 import six
 from shapely.geometry import Polygon
+        from PIL import Image
+
 
 
 class DecodeImage(object):

@@ -34,23 +34,39 @@ def do_ocr(img_base64):
     return detect_recognize(image)
 
 
+# @app.route('/ocr', methods=['POST'])
+# def ocr():
+#     print("start ocr.")
+#     if request.method == 'POST':
+#         json_content = request.get_json()
+#         file_base64 = json_content["file"]
+#         result = do_ocr(file_base64)
+#         return result
+
+from multiprocessing import Pool
+
 @app.route('/ocr', methods=['POST'])
 def ocr():
     print("start ocr.")
     if request.method == 'POST':
         json_content = request.get_json()
         file_base64 = json_content["file"]
-        result = do_ocr(file_base64)
-        return result
+        # result = do_ocr(file_base64)       
+        #return result
 
-
+        with Pool(1) as p:
+            result = p.map(
+                do_ocr,
+                [file_base64]
+            )
+        return result[0]
 
 if __name__ == '__main__':
-    debug = False
+    debug = True
     if debug:
         app.run(
-            host='127.0.0.1',
-            port=8080,
+            host='0.0.0.0',
+            port=9003,
             debug=True,
             threaded=True,
             # processes=True,
