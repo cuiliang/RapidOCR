@@ -70,7 +70,7 @@ port = 9003
 
 
 from gevent.socket import socket
-listener = socket(('0.0.0.0', port))
+listener = socket()
 
 def serve_forever(listener):
     WSGIServer(listener, app).serve_forever()
