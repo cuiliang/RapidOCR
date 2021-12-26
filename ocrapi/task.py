@@ -60,6 +60,7 @@ def get_lines(region_list):
     lines = StringIO()
     top = region_list[0]['rect']['top']
     delta = 12  # 判断是新行的高度
+    two_line = 50 # 空两行的高度
     start_new_line = True # 是否开始了一个新的行
 
     for region in region_list:
@@ -74,7 +75,7 @@ def get_lines(region_list):
                 lines.write(item_text)
         else: #开始了新的一行
             lines.write('\n')            
-            if (item_top - top > delta*3): # 高度差别比较大，使用两个空行。
+            if (item_top - top > two_line): # 高度差别比较大，使用两个空行。
                 lines.write('\n') 
             start_new_line = True
             top = item_top
