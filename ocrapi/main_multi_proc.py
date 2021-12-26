@@ -42,6 +42,7 @@ def function_benchmark():
 
 @app.route('/ocr', methods=['POST'])
 def ocr():
+    print('new ocr request...')
     if request.method == 'POST':
         url_get = request.get_json()
         url_get = str(url_get).split(',')[1]
@@ -69,43 +70,43 @@ def ocr1():
 port = 9003
 
 
-from gevent.socket import socket
-listener = socket()
+# from gevent.socket import socket
+# listener = socket()
 
-def serve_forever(listener):
-    WSGIServer(listener, app).serve_forever()
+# def serve_forever(listener):
+#     WSGIServer(listener, app).serve_forever()
 
-number_of_processes = 5
+# number_of_processes = 5
 
-for i in range(number_of_processes):
-    Process(target=serve_forever, args=(listener,)).start()
+# for i in range(number_of_processes):
+#     Process(target=serve_forever, args=(listener,)).start()
 
-serve_forever(listener)
-
-
+# serve_forever(listener)
 
 
-# def run(MULTI_PROCESS):
-#     if MULTI_PROCESS == False:
-#         WSGIServer(('0.0.0.0', port), app).serve_forever()
-#     else:
-#         mulserver = WSGIServer(('0.0.0.0', port), app)
-#         mulserver.start()
-
-#         def server_forever():
-#             mulserver.start_accepting()
-#             mulserver._stop_event.wait()
-
-#         for i in range(cpu_count()):
-#             p = Process(target=server_forever)
-#             p.start()
 
 
-# if __name__ == "__main__":
-#     # 单进程 + 协程
-#     # run(False)
-#     # 多进程 + 协程
-#     run(False)
+def run(MULTI_PROCESS):
+    if MULTI_PROCESS == False:
+        WSGIServer(('0.0.0.0', port), app).serve_forever()
+    else:
+        mulserver = WSGIServer(('0.0.0.0', port), app)
+        mulserver.start()
+
+        def server_forever():
+            mulserver.start_accepting()
+            mulserver._stop_event.wait()
+
+        for i in range(cpu_count()):
+            p = Process(target=server_forever)
+            p.start()
+
+
+if __name__ == "__main__":
+    # 单进程 + 协程
+    # run(False)
+    # 多进程 + 协程
+    run(True)
 
 
 '''

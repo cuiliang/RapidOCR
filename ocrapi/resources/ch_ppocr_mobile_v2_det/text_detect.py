@@ -59,6 +59,12 @@ class TextDetector(object):
         sess_opt = onnxruntime.SessionOptions()
         sess_opt.log_severity_level = 4
         sess_opt.enable_cpu_mem_arena = False
+
+        # sess_opt.inter_op_num_threads = 2
+        # sess_opt.intra_op_num_threads = 2
+        # sess_opt.execution_mode  = onnxruntime.ExecutionMode.ORT_SEQUENTIAL
+        # sess_opt.graph_optimization_level = onnxruntime.GraphOptimizationLevel.ORT_ENABLE_ALL
+
         self.session = onnxruntime.InferenceSession(det_model_path, sess_opt)
         self.input_name = self.session.get_inputs()[0].name
         self.output_name = self.session.get_outputs()[0].name
