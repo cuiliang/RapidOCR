@@ -27,7 +27,7 @@ app.config['MAX_CONTENT_LENGTH'] = 3 * 1024 * 1024
 
 @app.route('/')
 def index():
-    return "Hello world."
+    return "Quicker Ocr Server."
 
 @app.route("/cppla", methods=['GET'])
 def function_benchmark():
@@ -54,35 +54,9 @@ def ocr():
             image = cv2.cvtColor(image, cv2.COLOR_GRAY2BGR)
         return detect_recognize(image)
 
-@app.route('/ocr1', methods=['POST'])
-def ocr1():
-    if request.method == 'POST':
-        url_get = request.get_json()
-        url_get = str(url_get).split(',')[1]
 
-        image = base64.b64decode(url_get)
-        nparr = np.frombuffer(image, np.uint8)
-        image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-        if image.ndim == 2:
-            image = cv2.cvtColor(image, cv2.COLOR_GRAY2BGR)
-        return detect_recognize(image)
 
 port = 9003
-
-
-# from gevent.socket import socket
-# listener = socket()
-
-# def serve_forever(listener):
-#     WSGIServer(listener, app).serve_forever()
-
-# number_of_processes = 5
-
-# for i in range(number_of_processes):
-#     Process(target=serve_forever, args=(listener,)).start()
-
-# serve_forever(listener)
-
 
 
 
@@ -108,39 +82,3 @@ if __name__ == "__main__":
     # 多进程 + 协程
     run(True)
 
-
-'''
-##################################################
-
-@app.route('/ocr', methods=['POST'])
-def ocr():
-    if request.method == 'POST':
-        url_get = request.get_json()
-        url_get = str(url_get).split(',')[1]
-
-        image = base64.b64decode(url_get)
-        nparr = np.frombuffer(image, np.uint8)
-        image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-        if image.ndim == 2:
-            image = cv2.cvtColor(image, cv2.COLOR_GRAY2BGR)
-        return detect_recognize(image)
-
-
-if __name__ == '__main__':
-    debug = False
-    if debug:
-        app.run(host='127.0.0.1',
-                port=9003,
-                debug=True,
-                processes=True)
-    else:
-        host = '0.0.0.0'
-        port = 8080
-        print(
-            f'launching gevent server... on {host}:{port}'
-        )
-        
-        
-        http_server = WSGIServer((host, port), app)
-        http_server.serve_forever()
-'''
