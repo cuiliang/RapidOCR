@@ -20,7 +20,7 @@ def do_something(
     # cv2.waitKey(0)
     
     #find contours
-    ctrs, hier = cv2.findContours(img_dilation.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    ctrs, hier = cv2.findContours(img_dilation.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
     #sort contours
     def func(ctr):
