@@ -109,8 +109,19 @@ class TextSystem(object):
         return _boxes
 
     def __call__(self, img):
-        dt_boxes, det_elapse = self.text_detector(img)
-        print(f"dt_boxes num: {len(dt_boxes)}, elapse: {det_elapse}")
+        img_height, img_width = img.shape[0:2]
+
+        
+        # 如果高度比较小，直接识别
+        ONE_LINE_HEIGHT = 50
+        if (img_height < ONE_LINE_HEIGHT):
+            dt_boxes = np.array([np.array([[0,0],[img_width-1,0],[img_width-1, img_height-1],[0,img_height-1]], dtype="float32")])
+            det_elapse = 0.001
+        else:
+            dt_boxes, det_elapse = self.text_detector(img)
+
+        print(f"dt_boxes num: {len(dt_boxes)}, elapse: {det_elapse}", dt_boxes, det_elapse)
+        
         if dt_boxes is None or dt_boxes.size == 0:
             return None, None, img
 
