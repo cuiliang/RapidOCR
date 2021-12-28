@@ -9,8 +9,16 @@ import cv2
 import numpy as np
 from flask import Flask, render_template
 from flask import g, make_response, request
-from pyinstrument import Profiler
+#from pyinstrument import Profiler
 from multiprocessing import Pool
+
+from gevent import monkey
+from gevent.pywsgi import WSGIServer # pip install gevent
+monkey.patch_all()
+
+from multiprocessing import cpu_count, Process
+import datetime
+import os
 
 
 from task import detect_recognize
@@ -21,20 +29,20 @@ app = Flask(__name__)
 app.config['MAX_CONTENT_LENGTH'] = 3 * 1024 * 1024
 
 
-@app.before_request
-def before_request():
-    if "profile" in request.args:
-        g.profiler = Profiler()
-        g.profiler.start()
+# @app.before_request
+# def before_request():
+#     if "profile" in request.args:
+#         g.profiler = Profiler()
+#         g.profiler.start()
 
 
-@app.after_request
-def after_request(response):
-    if not hasattr(g, "profiler"):
-        return response
-    g.profiler.stop()
-    output_html = g.profiler.output_html()
-    return make_response(output_html)
+# @app.after_request
+# def after_request(response):
+#     if not hasattr(g, "profiler"):
+#         return response
+#     g.profiler.stop()
+#     output_html = g.profiler.output_html()
+#     return make_response(output_html)
 
 
 @app.route('/')
@@ -71,29 +79,54 @@ def ocr():
     return result
 
 
+port = 9003
 
-if __name__ == '__main__':
-    debug = False
-    if debug:
-        app.run(
-            host='127.0.0.1',
-            port=8080,
-            debug=True,
-            threaded=True,
-            # processes=True,
-        )
+
+
+def run(MULTI_PROCESS):
+    if MULTI_PROCESS == False:
+        WSGIServer(('0.0.0.0', port), app).serve_forever()
     else:
-        host = '0.0.0.0'
-        port = 9003
-        print(
-            f'launching server... on {host}:{port}'
-        )
+        mulserver = WSGIServer(('0.0.0.0', port), app)
+        mulserver.start()
+
+        def server_forever():
+            mulserver.start_accepting()
+            mulserver._stop_event.wait()
+
+        for i in range(cpu_count()):
+            p = Process(target=server_forever)
+            p.start()
+
+
+if __name__ == "__main__":
+    # 单进程 + 协程
+    # run(False)
+    # 多进程 + 协程
+    run(True)
+
+# if __name__ == '__main__':
+#     debug = False
+#     if debug:
+#         app.run(
+#             host='127.0.0.1',
+#             port=8080,
+#             debug=True,
+#             threaded=True,
+#             # processes=True,
+#         )
+#     else:
+#         host = '0.0.0.0'
+#         port = 9003
+#         print(
+#             f'launching server... on {host}:{port}'
+#         )
         
 
-        from waitress import serve # pip install waitress
-        serve(
-            app,
-            host=host,
-            port=port,
-            threads=20
-        )
+#         from waitress import serve # pip install waitress
+#         serve(
+#             app,
+#             host=host,
+#             port=port,
+#             threads=20
+#         )

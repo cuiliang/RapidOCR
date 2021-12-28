@@ -37,8 +37,8 @@ def detect_text(image, show_result=False):
     cv2.waitKey(0)
 
     #find contours
-    ctrs, hier = cv2.findContours(img_dilation.copy(), cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
 
+    ctrs, hier = cv2.findContours(img_dilation.copy(), cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
 
     #sort contours
     def func(ctr):
