@@ -22,19 +22,19 @@ def detect_text(image, show_result=False):
     kernel = np.ones((5,3),np.uint8)
     closing = cv2.morphologyEx(edges, cv2.MORPH_CLOSE, kernel)
     # cv2.imshow('closing', closing)
-    cv2.waitKey(0)
+    #cv2.waitKey(0)
 
 
     kernel = np.ones((4,4),np.uint8)
     erosion = cv2.erode(closing, kernel, iterations = 1)
     # cv2.imshow('erosion', erosion)
-    cv2.waitKey(0)
+    #cv2.waitKey(0)
 
     #dilation
     kernel = np.ones((5,20), np.uint8)
     img_dilation = cv2.dilate(erosion, kernel, iterations=2)
     # cv2.imshow('dilated',img_dilation)
-    cv2.waitKey(0)
+    #cv2.waitKey(0)
 
     #find contours
 
@@ -119,8 +119,8 @@ def detect_text(image, show_result=False):
             cv2.rectangle(image,(x,y),( x + w, y + h ),(90,0,255),2)
 
         # cv2.imwrite('final_bounded_box_image.png', image)
-        cv2.imshow('marked areas',image)
-        cv2.waitKey(0)
+        #cv2.imshow('marked areas',image)
+        #cv2.waitKey(0)
 
 
     cropped_images = []
