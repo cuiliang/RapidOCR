@@ -9,7 +9,7 @@ import cv2
 import numpy as np
 from flask import Flask, render_template
 from flask import g, make_response, request
-from pyinstrument import Profiler
+#from pyinstrument import Profiler
 from multiprocessing import Pool
 
 from gevent import monkey
@@ -29,20 +29,20 @@ app = Flask(__name__)
 app.config['MAX_CONTENT_LENGTH'] = 3 * 1024 * 1024
 
 
-@app.before_request
-def before_request():
-    if "profile" in request.args:
-        g.profiler = Profiler()
-        g.profiler.start()
+# @app.before_request
+# def before_request():
+#     if "profile" in request.args:
+#         g.profiler = Profiler()
+#         g.profiler.start()
 
 
-@app.after_request
-def after_request(response):
-    if not hasattr(g, "profiler"):
-        return response
-    g.profiler.stop()
-    output_html = g.profiler.output_html()
-    return make_response(output_html)
+# @app.after_request
+# def after_request(response):
+#     if not hasattr(g, "profiler"):
+#         return response
+#     g.profiler.stop()
+#     output_html = g.profiler.output_html()
+#     return make_response(output_html)
 
 
 @app.route('/')

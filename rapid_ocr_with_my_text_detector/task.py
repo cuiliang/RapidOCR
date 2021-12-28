@@ -88,8 +88,10 @@ def detect_recognize(image_path):
     _last_top = 0
     for region in regions:
         this_top = region["rect"]["top"]
-        if this_top - _last_top > 10:
+        if this_top - _last_top > 15:       # 发生了换行
             lines += "\n"
+            if (this_top - _last_top > 50): # 多个换行
+                lines += "\n"
             lines += region["text"]
         else:
             lines += " "
