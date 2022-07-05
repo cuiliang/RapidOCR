@@ -2,7 +2,7 @@ Global:
     text_score: 0.5
     use_angle_cls: true
     print_verbose: true
-    min_height: 30
+    min_height: 40
 
 Det:
     module_name: ch_ppocr_v2_det
@@ -31,7 +31,7 @@ Det:
             keep_keys: ['image', 'shape']
 
     post_process:
-        thresh: 0.3
+        thresh: 0.6
         box_thresh: 0.5
         max_candidates: 1000
         unclip_ratio: 1.6
