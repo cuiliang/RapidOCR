@@ -23,6 +23,8 @@ app = Flask(__name__)
 # 设置上传文件大小
 app.config['MAX_CONTENT_LENGTH'] = 5 * 1024 * 1024
 
+# 服务端口号
+port = 9003
 
 @app.route('/')
 def index():
@@ -46,7 +48,7 @@ def ocr():
 
 #####################################################
 
-port = 9003
+
 
 def run(MULTI_PROCESS):
     if MULTI_PROCESS == False:
