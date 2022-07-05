@@ -1,7 +1,6 @@
-# !/usr/bin/env python
 # -*- encoding: utf-8 -*-
-# @File: main.py
-# @Author: Max
+# @Author: SWHL
+# @Contact: liekkaskono@163.com
 import base64
 
 import cv2
@@ -36,7 +35,4 @@ def ocr():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0',
-            port=9003,
-            debug=False,
-            processes=True)
+    app.run(host='0.0.0.0', port=9003, debug=False, processes=True)

@@ -1,27 +1,18 @@
-# !/usr/bin/env python
 # -*- encoding: utf-8 -*-
-# @File: task.py
-# @Time: 2021/03/07 20:29:32
 # @Author: SWHL
 # @Contact: liekkaskono@163.com
 import base64
-from functools import reduce
+import copy
 import json
-import time
+from functools import reduce
+from pathlib import Path
 
 import cv2
 import numpy as np
 
-from resources.rapidOCR import TextSystem, draw_text_det_res, check_and_read_gif
+from rapidocr_onnxruntime import TextSystem
 
-det_model_path = 'resources/models/ch_PP-OCRv2_det_infer.onnx'
-cls_model_path = 'resources/models/ch_ppocr_mobile_v2.0_cls_infer.onnx'
-rec_model_path = 'resources/models/ch_ppocr_mobile_v2.0_rec_infer.onnx'
-
-text_sys = TextSystem(det_model_path,
-                      rec_model_path,
-                      use_angle_cls=True,
-                      cls_model_path=cls_model_path)
+text_sys = TextSystem('config.yaml')
 
 
 def detect_recognize(image_path):
@@ -35,8 +26,7 @@ def detect_recognize(image_path):
     dt_boxes, rec_res, img, elapse_part = text_sys(image)
 
     if dt_boxes is None or rec_res is None:
-        temp_rec_res = []
-        rec_res_data = json.dumps(temp_rec_res,
+        rec_res_data = json.dumps([],
                                   indent=2,
                                   ensure_ascii=False)
         elapse = 0
@@ -48,6 +38,7 @@ def detect_recognize(image_path):
         for i, value in enumerate(rec_res):
             temp_rec_res.append([i, value[0], value[1]])
         temp_rec_res = np.array(temp_rec_res)
+
         rec_res_data = json.dumps(temp_rec_res.tolist(),
                                   indent=2,
                                   ensure_ascii=False)
@@ -58,7 +49,34 @@ def detect_recognize(image_path):
 
         elapse = reduce(lambda x, y: float(x)+float(y), elapse_part)
         elapse_part = ','.join([str(x) for x in elapse_part])
+
     return json.dumps({'image': img,
                        'total_elapse': f'{elapse:.4f}',
                        'elapse_part': elapse_part,
                        'rec_res': rec_res_data})
+
+
+def check_and_read_gif(img_path):
+    if Path(img_path).name[-3:] in ['gif', 'GIF']:
+        gif = cv2.VideoCapture(img_path)
+        ret, frame = gif.read()
+        if not ret:
+            print("Cannot read {}. This gif image maybe corrupted.")
+            return None, False
+        if len(frame.shape) == 2 or frame.shape[-1] == 1:
+            frame = cv2.cvtColor(frame, cv2.COLOR_GRAY2RGB)
+        imgvalue = frame[:, :, ::-1]
+        return imgvalue, True
+    return None, False
+
+
+def draw_text_det_res(dt_boxes, raw_im):
+    src_im = copy.deepcopy(raw_im)
+    for i, box in enumerate(dt_boxes):
+        box = np.array(box).astype(np.int32).reshape(-1, 2)
+        cv2.polylines(src_im, [box], True,
+                      color=(0, 0, 255),
+                      thickness=1)
+        cv2.putText(src_im, str(i), (int(box[0][0]), int(box[0][1])),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 2)
+    return src_im

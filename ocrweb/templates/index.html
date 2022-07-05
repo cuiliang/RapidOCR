@@ -13,20 +13,20 @@
         <a href="https://github.com/RapidAI/RapidOCR/tree/main/ocrweb#readme" style="font-size:14px">了解Demo</a>
     </h1>
     <div class='area'>
-        <span class="uplodNote">图片文件类型支持PNG、JPG、JPEG、BMP，图片大小不超过3M。</span>
-        <span class="btn-gen" onclick="javascript:$('#rapid_ocr').click();">试试你的图片？</span>
+        <span class="btn-gen" onclick="javascript:$('#rapid_ocr').click();">试试你的图片?</span>
         <input type="file" style="display: none;" name="pic" id="rapid_ocr"/>
+        <span class="uplodNote">支持PNG、JPG、JPEG、BMP，图片大小不超过3M。</span>
     </div>
     <br/>
     <div class="area">
         <div class="leftarea" id="detectDiv">
-            <span class="span_title">文本检测结果</span><br/><br/>
+            <span class="span_title">文 本 检 测 结 果</span><br/><br/>
             <div class="wrapper" id="wrapper" hidden></div>
             <img id="detect_img" src=""/>
         </div>
 
         <div class="rightarea" id="recogDiv">
-            <span id="rec_res" class="span_title">文本识别结果</span>
+            <span id="rec_res" class="span_title">文 本 识 别 结 果</span>
             <br/><br/>
             <table id="locTable" class="table" cellspacing="0" cellpadding="5"></table>
         </div>
@@ -89,14 +89,14 @@
                             }
 
                             if (data["total_elapse"]){
-                                document.getElementById("rec_res").textContent = "文本识别结果(Total:" + String(data["total_elapse"]) + "s)"
+                                document.getElementById("rec_res").textContent = "文 本 检 测 结 果(Total:" + String(data["total_elapse"]) + "s)"
                                 $("#rec_res").show();
                             }
 
                             if (data["rec_res"]){
                                 var rec_res = JSON.parse(data["rec_res"]);
 
-                                console.log(data['elapse_part']);
+                                // console.log(data['elapse_part']);
                                 if (data['elapse_part']){
                                     var elapse_list = data['elapse_part'].split(',');
                                 }else{
