@@ -7,3 +7,5 @@ Shapely>=1.7.1
 Flask>=2.1.2
 Pillow
 PyYAML
+gevent
+multiprocess
