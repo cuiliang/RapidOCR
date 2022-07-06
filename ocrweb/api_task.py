@@ -89,14 +89,14 @@ def detect_recognize(image_path):
     lines = ""
     _last_top = 0
     templine = []  # 同一行的，先放在一起，然后根据left排序一下再输出。比较因为较少的高度差导致顺序错位
+    sortedregions = []  # 排序后的
     for region in regions:
         this_top = region["rect"]["top"]
         if abs(this_top - _last_top) > 10:       # 发生了换行
-            if len(templine) > 0:
-                templine.sort(key = lambda x: x["rect"]["left"])
-                for block in templine:
-                    lines += " " + block["text"]
+            if (len(templine) > 0):
+                lines += output_one_line(templine, sortedregions, lines)
                 lines += "\n"
+
             if (this_top - _last_top > 60): # 多个换行
                lines += "\n"
 
@@ -117,15 +117,18 @@ def detect_recognize(image_path):
         _last_top = this_top
     
     # 还没有输出的内容输出一下
-    if len(templine) > 0:
-        templine.sort(key = lambda x: x["rect"]["left"])
-        for block in templine:
-            lines += " " + block["text"]
-        lines += "\n"
-    if (this_top - _last_top > 60): # 多个换行
-        lines += "\n"
+    lines += output_one_line(templine, sortedregions, lines)
+    # if len(templine) > 0:
+    #     templine.sort(key = lambda x: x["rect"]["left"])
+    #     line = ''
+    #     for block in templine:
+    #         line += " " + block["text"]
+    #         sortedregions.append(block)
+    #     lines += line.lstrip()
+    #     lines += "\n"
+    
 
-    lines = lines.lstrip()
+    #lines = lines.lstrip()
 
     #####################################    
     # lines = ""
@@ -150,7 +153,7 @@ def detect_recognize(image_path):
         # 'image': img,
         'result': {
             "lines": lines,
-            "regions": regions,
+            "regions": sortedregions,
         },
         'info': {
             'total_elapse': elapse,
@@ -162,6 +165,17 @@ def detect_recognize(image_path):
         },
     })
 
+def output_one_line(templine, sortedregions, lines):
+    if len(templine) > 0:
+        templine.sort(key = lambda x: x["rect"]["left"])
+        line = ''
+        for block in templine:
+            line += " " + block["text"]
+            sortedregions.append(block)
+        return line.lstrip()
+    else:
+        return ''
+        
 
 def check_and_read_gif(img_path):
     if Path(img_path).name[-3:] in ['gif', 'GIF']:
