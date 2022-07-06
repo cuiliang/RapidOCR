@@ -1,14 +1,14 @@
 Global:
     text_score: 0.5
     use_angle_cls: true
-    print_verbose: false
+    print_verbose: true
     min_height: 45
 
 Det:
     module_name: ch_ppocr_v2_det
     class_name: TextDetector
-    model_path: resources/models/ch_PP-OCRv3_det_infer.onnx
-    # model_path: resources/models/ch_PP-OCRv2_det_infer.onnx
+    # model_path: resources/models/ch_PP-OCRv3_det_infer.onnx
+    model_path: resources/models/ch_PP-OCRv2_det_infer.onnx
 
     use_cuda: false
     # Details of the params: https://onnxruntime.ai/docs/execution-providers/CUDA-ExecutionProvider.html
@@ -33,9 +33,9 @@ Det:
 
     post_process:
         thresh: 0.6
-        box_thresh: 0.5
+        box_thresh: 0.3
         max_candidates: 1000
-        unclip_ratio: 1.6
+        unclip_ratio: 1.8
         use_dilation: true
 
 Cls:
