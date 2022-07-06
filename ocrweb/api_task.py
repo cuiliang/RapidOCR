@@ -77,30 +77,74 @@ def detect_recognize(image_path):
                 "text": res[1],
                 "confidence": float(res[2]),
                 "rect": {
-                    "left": rect[0][0],
-                    "top": rect[0][1],
-                    "right": rect[1][0],
-                    "bottom": rect[1][1],
+                    "left": round(rect[0][0]),
+                    "top": round(rect[0][1]),
+                    "right": round(rect[1][0]),
+                    "bottom": round(rect[1][1]),
                 },
             }
         )
-        
+
+    
     lines = ""
     _last_top = 0
+    templine = []  # 同一行的，先放在一起，然后根据left排序一下再输出。比较因为较少的高度差导致顺序错位
     for region in regions:
         this_top = region["rect"]["top"]
-        if this_top - _last_top > 15:       # 发生了换行
-            lines += "\n"
-            if (this_top - _last_top > 60): # 多个换行
+        if abs(this_top - _last_top) > 10:       # 发生了换行
+            if len(templine) > 0:
+                templine.sort(key = lambda x: x["rect"]["left"])
+                for block in templine:
+                    lines += " " + block["text"]
                 lines += "\n"
-            lines += region["text"]
+            if (this_top - _last_top > 60): # 多个换行
+               lines += "\n"
+
+
+            # 开启新行
+            templine.clear()
+            templine.append(region)
+
+            #lines += "\n"
+            #if (this_top - _last_top > 60): # 多个换行
+            #    lines += "\n"
+            #lines += region["text"]
         else:
-            lines += " "
-            lines += region["text"]
+            templine.append(region)
+            # lines += " "
+            # lines += region["text"]
 
         _last_top = this_top
     
+    # 还没有输出的内容输出一下
+    if len(templine) > 0:
+        templine.sort(key = lambda x: x["rect"]["left"])
+        for block in templine:
+            lines += " " + block["text"]
+        lines += "\n"
+    if (this_top - _last_top > 60): # 多个换行
+        lines += "\n"
+
     lines = lines.lstrip()
+
+    #####################################    
+    # lines = ""
+    # _last_top = 0
+    # templine = []  # 同一行的，先放在一起，然后根据left排序一下再输出。比较因为较少的高度差导致顺序错位
+    # for region in regions:
+    #     this_top = region["rect"]["top"]
+    #     if this_top - _last_top > 15:       # 发生了换行
+    #         lines += "\n"
+    #         if (this_top - _last_top > 60): # 多个换行
+    #             lines += "\n"
+    #         lines += region["text"]
+    #     else:
+    #         lines += " "
+    #         lines += region["text"]
+
+    #     _last_top = this_top
+    
+    # lines = lines.lstrip()
     
     return json.dumps({
         # 'image': img,
