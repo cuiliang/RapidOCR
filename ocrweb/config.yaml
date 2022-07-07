@@ -1,6 +1,6 @@
 Global:
     text_score: 0.5
-    use_angle_cls: true
+    use_angle_cls: false
     print_verbose: true
     min_height: 45
 
