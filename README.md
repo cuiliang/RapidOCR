@@ -23,12 +23,12 @@
 - [RapidOCR (捷智OCR)](#rapidocr-捷智ocr)
   - [简介](#简介)
   - [近期更新(more)](#近期更新more)
+      - [✨2022-07-07 update:](#2022-07-07-update)
       - [😁2022-07-05 update:](#2022-07-05-update)
       - [🏝2022-06-30 update:](#2022-06-30-update)
       - [📌2022-06-25 update:](#2022-06-25-update)
       - [🥟2022-05-25 update](#2022-05-25-update)
       - [🍿2022-05-15 update](#2022-05-15-update)
-      - [😀2022-05-12 upadte](#2022-05-12-upadte)
   - [整个框架](#整个框架)
   - [常见问题  FAQ](#常见问题--faq)
   - [SDK 编译状态](#sdk-编译状态)
@@ -42,6 +42,7 @@
       - [模型转onnx](#模型转onnx)
   - [原始发起者及初创作者](#原始发起者及初创作者)
   - [致谢](#致谢)
+  - [赞助](#赞助)
   - [版权声明](#版权声明)
   - [授权](#授权)
   - [联系我们](#联系我们)
@@ -62,6 +63,10 @@
 - 基于百度的开源PaddleOCR 模型及训练，任何人可以使用本推理库，也可以根据自己的需求使用百度的paddlepaddle框架进行模型优化。
 
 ## 近期更新([more](./docs/change_log.md))
+#### ✨2022-07-07 update:
+- 修复python版中v3 rec推理bug，并将v3 rec与v2 rec合并为同一套推理代码，更加简洁和方便
+- 添加python模块下的单元测试
+- 该页面添加[致谢模块](#致谢)，感谢为这个项目作出贡献的小伙伴。
 
 #### 😁2022-07-05 update:
 - 添加对单行文本的处理能力，对于单行文本，可自行设定阈值，不过检测模块，直接识别即可。详情参见[README](./python/README.md#configyamlconfigyaml中常用参数介绍)
@@ -83,9 +88,6 @@
 - 增加PaddleOCR v3 rec模型转换后的ONNX模型，直接去网盘下载替换即可。([百度网盘](https://pan.baidu.com/s/1PTcgXG2zEgQU6A_A3kGJ3Q?pwd=jhai) | [Google Drive](https://drive.google.com/drive/folders/1x_a9KpCo_1blxH1xFOfgKVkw1HYRVywY?usp=sharing))
 - 增加文本识别模型各个版本效果对比表格，详情点击[各个版本ONNX模型效果对比](#各个版本onnx模型效果对比)。v3的文本识别模型从自己构建测试集上的指标来看不如之前的好。
 
-#### 😀2022-05-12 upadte
-- 增加PaddleOCR v3 det模型转换的ONNX模型，直接去网盘下载，替换即可。([百度网盘](https://pan.baidu.com/s/1mkirNltJS481In4g81jP3w?pwd=zy37) | [Google Drive](https://drive.google.com/drive/folders/1x_a9KpCo_1blxH1xFOfgKVkw1HYRVywY?usp=sharing))
-- 增加各个版本文本检测模型效果对比表格，详情点击[各个版本ONNX模型效果对比](#各个版本onnx模型效果对比)。v3的文本检测模型从自己构建测试集上的指标来看是好于之前的v2的，推荐使用。
 
 ## 整个框架
 <div align="center">
@@ -104,7 +106,7 @@
 
 ## [在线demo](http://rapidocr.51pda.cn:9003/)
 - **说明**: 本在线demo不存储小伙伴们上传测试的任何图像数据
-- **demo所用模型组合为**: `ch_PP-OCRv3_det + ch_ppocr_mobile_v2.0_cls +  ch_ppocr_mobile_v2.0_rec`
+- **demo所用模型组合（最优组合）为**: `ch_PP-OCRv3_det + ch_ppocr_mobile_v2.0_cls + ch_PP-OCRv3_rec`
 - **运行机器配置**: `4核 AMD EPYC 7K62 48-Core Processor `
 - **示例图**:
     <div align="center">
@@ -121,8 +123,8 @@
     ├── assets              # 一些演示用的图片，不是测试集
     ├── commonlib           # 通用库
     ├── cpp                 # 基于c++的工程项目文件夹
+    ├── docs                # 相关的一些说明文档
     ├── dotnet              # .Net程序目录
-    ├── FAQ.md              # 一些问答整理
     ├── images              # 测试用图片，典型的测试图，一张是自然场景
     ├── include             # 编译c语言接口库时的头文件目录
     ├── ios                 # 苹果手机平台工程目录
@@ -191,7 +193,14 @@
 
 ## 致谢
 - 非常感谢[DeliciaLaniD](https://github.com/DeliciaLaniD)修复ocrweb中扫描动画起始位置错位问题。
-- 非常感谢[zhsunlight](https://github.com/zhsunlight)关于参数化调用GPU推理的建议。
+- 非常感谢[zhsunlight](https://github.com/zhsunlight)关于参数化调用GPU推理的建议以及细致周到的测试。
+- 非常感谢[lzh111222334](https://github.com/lzh111222334)修复python版本下rec前处理部分bug。
+
+## 赞助
+
+|赞助者|应用的产品|
+|:---:|:---:|
+|<a href="https://github.com/cuiliang" title="cuiliang"><img src="https://avatars.githubusercontent.com/u/1972649?v=4" width=65 height=65></a>|<a href="https://getquicker.net/" title="Quicker指尖工具箱"><img src="https://tvax2.sinaimg.cn/crop.0.0.600.600.180/82cedfe9ly8h0gd3koj1qj20go0goq34.jpg?KID=imgbed,tva&Expires=1657299650&ssig=7MKPeFM6RU" width=65 height=65></a>|
 
 ## 版权声明
 - 如果你的产品使用了本仓库中的全部或部分代码、文字或材料
