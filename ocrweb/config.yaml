@@ -7,8 +7,8 @@ Global:
 Det:
     module_name: ch_ppocr_v2_det
     class_name: TextDetector
-    model_path: resources/models/ch_PP-OCRv3_det_infer.onnx
-    # model_path: resources/models/ch_PP-OCRv2_det_infer.onnx
+    # model_path: resources/models/ch_PP-OCRv3_det_infer.onnx
+    model_path: resources/models/ch_PP-OCRv2_det_infer.onnx
 
     use_cuda: false
     # Details of the params: https://onnxruntime.ai/docs/execution-providers/CUDA-ExecutionProvider.html
@@ -20,7 +20,7 @@ Det:
 
     pre_process:
         DetResizeForTest:
-            limit_side_len: 30
+            limit_side_len: 1
             limit_type: min
         NormalizeImage:
             std: [0.229, 0.224, 0.225]
